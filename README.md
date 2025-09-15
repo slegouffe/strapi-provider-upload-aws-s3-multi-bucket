@@ -10,6 +10,17 @@ strapi.plugin('upload').provider.setOptions(BUCET_NAME, ACL);
 -	BUCKET_NAME: the name of the bucket where files will be uploaded 
 - ACL: the “ACL” options for this bucket 
 
+Simply call the upload service and your file will be uploaded in the BUCKET_NAME : 
+
+```
+const file = await strapi.plugin('upload').service('upload').upload({
+    data: ctx.request.body,
+    files: ctx.request.files.files,
+  }
+);
+```
+
+
 ## Resources
 
 - [LICENSE](LICENSE)
