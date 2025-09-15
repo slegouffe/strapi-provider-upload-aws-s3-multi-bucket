@@ -81,7 +81,7 @@ var index = {
                 const fileKey = getFileKey(file);
                 const url = await s3RequestPresigner.getSignedUrl(// @ts-expect-error - TODO fix client type
                 s3Client, new clientS3.GetObjectCommand({
-                    Bucket: config.params.Bucket,
+                    Bucket: config.params.CustomBucket || config.params.Bucket,
                     Key: fileKey,
                     ...customParams
                 }), {
@@ -102,16 +102,17 @@ var index = {
             },
             delete (file, customParams = {}) {
                 const command = new clientS3.DeleteObjectCommand({
-                    Bucket: config.params.Bucket,
+                    Bucket: config.params.CustomBucket || config.params.Bucket,
                     Key: getFileKey(file),
                     ...customParams
                 });
                 return s3Client.send(command);
             },
             setOptions (bucket, acl) {
-                console.log('setBucket - bucket', bucket);
-                config.params.Bucket = bucket;
-                config.params.ACL = acl;
+                config.params.CustomBucket = bucket;
+                if (acl) {
+                    config.params.CustomACL = acl;
+                }
             }
         };
     }
