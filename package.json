@@ -1,0 +1,41 @@
+{
+  "name": "strapi-provider-upload-aws-s3-multi-bucket",
+  "version": "1.0.0",
+  "description": "AWS S3 to multi bucket",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
+    "clean": "rm -rf dist",
+    "start": "node dist/index.cjs.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.600.0",
+    "@aws-sdk/lib-storage": "3.433.0",
+    "@aws-sdk/s3-request-presigner": "3.433.0",
+    "@aws-sdk/types": "3.433.0",
+    "lodash": "4.17.21"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "28.0.1",
+    "@rollup/plugin-dynamic-import-vars": "2.1.5",
+    "@rollup/plugin-image": "3.0.3",
+    "@rollup/plugin-json": "6.1.0",
+    "@rollup/plugin-node-resolve": "15.3.0",
+    "@rollup/plugin-swc": "0.4.0",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^24.3.0",
+    "rollup": "^4.50.1",
+    "rollup-plugin-html": "^0.2.1",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  }
+}
