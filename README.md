@@ -7,8 +7,8 @@ This is a fork of official @strapi/provider-upload-aws-s3 plugin that allows the
 strapi.plugin('upload').provider.setOptions(BUCET_NAME, ACL);
 ```
 
-•	BUCKET_NAME: the name of the bucket where files will be uploaded
-•	ACL: the “ACL” options for this bucket
+-	BUCKET_NAME: the name of the bucket where files will be uploaded 
+- ACL: the “ACL” options for this bucket 
 
 ## Resources
 
