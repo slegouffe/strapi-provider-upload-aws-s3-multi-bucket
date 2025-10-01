@@ -1,6 +1,6 @@
 {
   "name": "strapi-provider-upload-aws-s3-multi-bucket",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AWS S3 to multi bucket",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

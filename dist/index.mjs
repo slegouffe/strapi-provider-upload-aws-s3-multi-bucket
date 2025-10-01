@@ -75,7 +75,8 @@ var index = {
             },
             async getSignedUrl (file, customParams) {
                 // Do not sign the url if it does not come from the same bucket.
-                if (!isUrlFromBucket(file.url, config.params.Bucket, baseUrl)) {
+                const bucket = config.params.CustomBucket || config.params.Bucket;
+                if (!isUrlFromBucket(file.url, bucket, baseUrl)) {
                     return {
                         url: file.url
                     };
@@ -111,8 +112,6 @@ var index = {
                 return s3Client.send(command);
             },
             setOptions (bucket, acl) {
-                console.log('*** bucket ***', bucket);
-                console.log('*** acl ***', acl);
                 config.params.CustomBucket = bucket;
                 if (acl) {
                     config.params.CustomACL = acl;
