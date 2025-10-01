@@ -103,26 +103,30 @@ export default {
     };
 
     const upload = async (file: File, customParams: Partial<PutObjectCommandInput> = {}) => {
-      const fileKey = getFileKey(file);
-      const uploadObj = new Upload({
-        client: s3Client,
-        params: {
-          Bucket: config.params.Bucket,
-          Key: fileKey,
-          Body: file.stream || Buffer.from(file.buffer as any, 'binary'),
-          ACL: config.params.ACL,
-          ContentType: file.mime,
-          ...customParams,
-        },
-      });
+      try {
+        const fileKey = getFileKey(file);
+        const uploadObj = new Upload({
+          client: s3Client,
+          params: {
+            Bucket: config.params.CustomBucket || config.params.Bucket,
+            Key: fileKey,
+            Body: file.stream || Buffer.from(file.buffer as any, 'binary'),
+            ACL: config.params.CustomACL || config.params.ACL,
+            ContentType: file.mime,
+            ...customParams,
+          },
+        });
 
-      const upload = (await uploadObj.done()) as UploadCommandOutput;
+        const upload = (await uploadObj.done()) as UploadCommandOutput;
 
-      if (assertUrlProtocol(upload.Location)) {
-        file.url = baseUrl ? `${baseUrl}/${fileKey}` : upload.Location;
-      } else {
-        // Default protocol to https protocol
-        file.url = `https://${upload.Location}`;
+        if (assertUrlProtocol(upload.Location)) {
+          file.url = baseUrl ? `${baseUrl}/${fileKey}` : upload.Location;
+        } else {
+          // Default protocol to https protocol
+          file.url = `https://${upload.Location}`;
+        }
+      } catch(e) {
+        console.log(e)
       }
     };
 
@@ -168,6 +172,8 @@ export default {
         return s3Client.send(command);
       },
       setOptions(bucket: string, acl?: string) {
+        console.log('*** bucket ***', bucket);
+        console.log('*** acl ***', acl);
         config.params.CustomBucket = bucket;
         if (acl) {
           config.params.CustomACL = acl;

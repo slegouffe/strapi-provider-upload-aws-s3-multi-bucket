@@ -45,24 +45,28 @@ var index = {
             return `${filePrefix}${path}${file.hash}${file.ext}`;
         };
         const upload = async (file, customParams = {})=>{
-            const fileKey = getFileKey(file);
-            const uploadObj = new Upload({
-                client: s3Client,
-                params: {
-                    Bucket: config.params.Bucket,
-                    Key: fileKey,
-                    Body: file.stream || Buffer.from(file.buffer, 'binary'),
-                    ACL: config.params.ACL,
-                    ContentType: file.mime,
-                    ...customParams
+            try {
+                const fileKey = getFileKey(file);
+                const uploadObj = new Upload({
+                    client: s3Client,
+                    params: {
+                        Bucket: config.params.CustomBucket || config.params.Bucket,
+                        Key: fileKey,
+                        Body: file.stream || Buffer.from(file.buffer, 'binary'),
+                        ACL: config.params.CustomACL || config.params.ACL,
+                        ContentType: file.mime,
+                        ...customParams
+                    }
+                });
+                const upload = await uploadObj.done();
+                if (assertUrlProtocol(upload.Location)) {
+                    file.url = baseUrl ? `${baseUrl}/${fileKey}` : upload.Location;
+                } else {
+                    // Default protocol to https protocol
+                    file.url = `https://${upload.Location}`;
                 }
-            });
-            const upload = await uploadObj.done();
-            if (assertUrlProtocol(upload.Location)) {
-                file.url = baseUrl ? `${baseUrl}/${fileKey}` : upload.Location;
-            } else {
-                // Default protocol to https protocol
-                file.url = `https://${upload.Location}`;
+            } catch (e) {
+                console.log(e);
             }
         };
         return {
@@ -107,6 +111,8 @@ var index = {
                 return s3Client.send(command);
             },
             setOptions (bucket, acl) {
+                console.log('*** bucket ***', bucket);
+                console.log('*** acl ***', acl);
                 config.params.CustomBucket = bucket;
                 if (acl) {
                     config.params.CustomACL = acl;
